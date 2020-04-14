@@ -29,7 +29,7 @@ class PostView(generics.ListCreateAPIView):
     '''
     Creats post and provide a list of all posts
     '''
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
@@ -86,14 +86,6 @@ class LikeAnalytics(generics.ListAPIView):
             .annotate(likes=Count('id'))
         )
         return likes_per_day
-
-
-class LoginToken(ObtainAuthToken):
-    def post(self, request, *args, **kwargs):
-        result = super().post(request, *args, **kwargs)
-        token = Token.objects.get(key=result.data['token'])
-        update_last_login(None, token.user)
-        return result
 
 
 class LastLogin(generics.ListAPIView):
